@@ -1,16 +1,13 @@
 package resources;
 
-import csv_parser.CsvImporterService;
-import csv_parser.CsvParserUtil;
+import csv_importer.CsvImporterService;
 import io.dropwizard.hibernate.UnitOfWork;
-import io.dropwizard.jersey.params.LongParam;
-import models.Order;
-import services.OrderService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.Optional;
 
 @Path("/csvimporter")
@@ -18,11 +15,6 @@ import java.util.Optional;
 public class CsvImporterResource {
     private CsvImporterService service;
 
-    /**
-     * Constructor.
-     *
-     * @param orderService DAO object to manipulate orders.
-     */
     @Inject
     public CsvImporterResource(CsvImporterService service) {
         this.service = service;
@@ -30,8 +22,19 @@ public class CsvImporterResource {
 
     @POST
     @UnitOfWork
-    public Response importFile() {
-        service.importFile();
-        return Response.ok().build();
+    public Response importFile(
+            @QueryParam("filename") Optional<String> filenameOpt,
+            @QueryParam("source") Optional<String> sourceOpt
+    ) {
+        if (filenameOpt.isPresent() && sourceOpt.isPresent()) {
+            try {
+                service.importFile(filenameOpt.get(), sourceOpt.get());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return Response.ok().build();
+        } else {
+            throw new IllegalArgumentException("filename and source must be provided");
+        }
     }
 }

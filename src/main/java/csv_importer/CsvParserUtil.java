@@ -1,7 +1,6 @@
-package csv_parser;
+package csv_importer;
 
 import app.App;
-import models.ParkingTransaction;
 import models.ParkingVisitTransaction;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -30,7 +29,7 @@ import static java.util.stream.Collectors.groupingBy;
  * We will expect you to have a Hello World setup in the environment of your choice ready to go to parse the CSV file. That means having your favorite library/package ready to go for reading CSV files, i.e. we expect that you will already know how to use the library for CSV parsing and will need very little time, if any, looking up how to use it.
  */
 public class CsvParserUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsvParserUtil.class);
 
     /**
      *

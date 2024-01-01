@@ -1,6 +1,6 @@
 package scratch;
 
-import csv_parser.CsvParserUtil;
+import csv_importer.CsvParserUtil;
 import models.ParkingVisitTransaction;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -13,9 +13,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static org.junit.Assert.*;
 

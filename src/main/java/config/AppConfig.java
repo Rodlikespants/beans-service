@@ -1,10 +1,12 @@
 package config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import csv_importer.CsvImporterService;
 import db.OrderDAO;
 import db.PersonDAO;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
+import resources.CsvImporterResource;
 import resources.OrderResource;
 import resources.PersonResource;
 import services.OrderService;
@@ -75,6 +77,8 @@ public class AppConfig extends Configuration implements DependencyInjectionConfi
         result.add(OrderResource.class);
         result.add(OrderService.class);
         result.add(OrderDAO.class);
+        result.add(CsvImporterResource.class);
+        result.add(CsvImporterService.class);
 
         return result;
     }

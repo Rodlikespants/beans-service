@@ -1,0 +1,105 @@
+package csv_importer.processors;
+
+import csv_importer.CsvParserUtil;
+import db.entities.transactions.BeansTransactionEntity;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.hamcrest.CoreMatchers;
+import org.junit.Test;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+
+public class CsvProcessorTest {
+
+    final String[] headers = {
+            "Details",
+            "Posting Date",
+            "Description",
+            "Amount",
+            "Type",
+            "Balance",
+            "Check or Slip #"
+    };
+
+    @Test
+    public void givenCSVFile_whenRead_thenContentsAsExpected() throws IOException {
+        String filename = "src/test/java/fixtures/csv_importer/chase_example1.csv";
+        Reader in = new FileReader(filename);
+
+        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+                .setHeader(headers)
+                .setSkipHeaderRecord(true)
+                .build();
+
+        Iterable<CSVRecord> records = csvFormat.parse(in);
+
+        List<Map<String, String>> actualCsvResults = new ArrayList<>();
+        for (CSVRecord record : records) {
+
+            Map<String, String> actualCsvResult = new HashMap<>();
+            for (String header: headers) {
+                String value = record.get(header);
+                actualCsvResult.put(header, value);
+            }
+            actualCsvResults.add(actualCsvResult);
+        }
+
+        Map<String, String> result1 = actualCsvResults.get(0);
+        Map<String, String> expectedResult1 = Stream.of(new String[][] {
+                { "Details", "DEBIT" },
+                { "Posting Date", "12/26/2023" },
+                { "Description", "ORIG CO NAME:AMERICAN EXPRESS CO ENTRY DESCR:ACH PMT    SEC:WEB IND ID:M0723           ORIG ID:3116583444" },
+                { "Amount", "-62.36" },
+                { "Type", "ACH_DEBIT" },
+                { "Balance", " " },
+                { "Check or Slip #", "" }
+        }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+        assertEquals(expectedResult1, result1);
+    }
+
+    @Test
+    public void testChaseTxns() {
+        String filename = "src/test/java/fixtures/csv_importer/chase_example1.csv";
+        ChaseCsvProcessor chase = new ChaseCsvProcessor();
+        List<BeansTransactionEntity> beansTxns = chase.parseTransactions(filename);
+        BeansTransactionEntity bean1 = beansTxns.get(0);
+        assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
+        assertThat(bean1.getAmount(), CoreMatchers.equalTo(BigDecimal.valueOf(-62.36)));
+        assertEquals(
+                LocalDate.of(2023, 12, 26)
+                        .atStartOfDay(ZoneId.of("America/New_York"))
+                        .toInstant(),
+                bean1.getEffectiveDate().toInstant()
+        );
+        assertEquals(
+                "ORIG CO NAME:AMERICAN EXPRESS CO ENTRY DESCR:ACH PMT    SEC:WEB IND ID:M0723           ORIG ID:3116583444",
+                bean1.getDescription()
+        );
+        assertEquals(
+                "MISC",
+                bean1.getCategory()
+        );
+    }
+
+//    @Test
+//    public void csvParserUtilCanParseContents() throws IOException {
+//        String filename = "src/test/java/fixtures/example2.csv";
+//        String[] headers = Arrays.stream(CsvParserUtil.Columns.values()).map(it -> it.name()).toArray(String[]::new);
+//        List<CSVRecord> recordList = CsvParserUtil.getRecordList(filename, headers);
+//        assertEquals(1, recordList.size());
+//        CSVRecord record = recordList.stream().findFirst().orElse(null);
+//        assertEquals("Brooklyn", record.get(CsvParserUtil.Columns.site.name()).trim());
+//    }
+}
