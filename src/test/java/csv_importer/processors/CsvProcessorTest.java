@@ -88,9 +88,40 @@ public class CsvProcessorTest {
                 bean1.getDescription()
         );
         assertEquals(
-                "MISC",
+                "ACH_DEBIT",
                 bean1.getCategory()
         );
+    }
+
+    @Test
+    public void testAmexTxns() {
+        String filename = "src/test/java/fixtures/csv_importer/amex_example1.csv";
+        AmexCsvProcessor amex = new AmexCsvProcessor();
+        List<BeansTransactionEntity> beansTxns = amex.parseTransactions(filename);
+        BeansTransactionEntity bean1 = beansTxns.get(0);
+        assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
+        assertThat(bean1.getAmount(), CoreMatchers.equalTo(BigDecimal.valueOf(3.26)));
+        assertEquals(
+                LocalDate.of(2023, 12, 24)
+                        .atStartOfDay(ZoneId.of("America/New_York"))
+                        .toInstant(),
+                bean1.getEffectiveDate().toInstant()
+        );
+        assertEquals(
+                "AplPay APPLE.COM/BILINTERNET CHARGE     CA",
+                bean1.getDescription()
+        );
+        assertEquals(
+                "Merchandise & Supplies-Internet Purchase",
+                bean1.getCategory()
+        );
+    }
+
+    @Test
+    public void testAmexTxnTotals() {
+        String filename = "src/test/java/fixtures/csv_importer/amex_example2.csv";
+        AmexCsvProcessor amex = new AmexCsvProcessor();
+        amex.processFile(filename);
     }
 
 //    @Test

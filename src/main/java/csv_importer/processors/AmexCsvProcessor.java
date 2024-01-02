@@ -14,12 +14,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.groupingBy;
 
 public class AmexCsvProcessor implements CsvProcessor {
     String[] headers = {
@@ -43,7 +46,21 @@ public class AmexCsvProcessor implements CsvProcessor {
     @Override
     public void processFile(String filename) {
         List<BeansTransactionEntity> beansTransactions = parseTransactions(filename);
+        Map<String, List<BeansTransactionEntity>> txnsByCategory = beansTransactions.stream()
+                .collect(groupingBy(BeansTransactionEntity::getCategory));
 
+        for (String category: txnsByCategory.keySet()) {
+            List<BeansTransactionEntity> txns = txnsByCategory.get(category);
+            BigDecimal total = BigDecimal.ZERO;
+            for (BeansTransactionEntity txn: txns) {
+                if (txn.getDirection() == BeansTransactionEntity.Direction.CREDIT) {
+                    total = total.add(txn.getAmount().multiply(BigDecimal.valueOf(-1)));
+                } else {
+                    total = total.add(txn.getAmount());
+                }
+            }
+            LOGGER.info("${} dollars spent in Category={} with {} transactions", total, category, txns.size());
+        }
     }
 
     @Override
@@ -66,10 +83,9 @@ public class AmexCsvProcessor implements CsvProcessor {
 
         List<AmexTransactionEntity> amexTxns = parseAmexTransactions(records);
 
-        // TODO persist Chase transactions
+        // TODO persist Amex transactions
 
-//        List<BeansTransactionEntity> beansTxns = chaseTxns.stream().map(it -> it)
-        return null;
+        return amexTxns.stream().map(AmexCsvProcessor::amexToBeanTxn).toList();
     }
 
     public static List<AmexTransactionEntity> parseAmexTransactions(List<CSVRecord> records) {
@@ -77,44 +93,45 @@ public class AmexCsvProcessor implements CsvProcessor {
     }
 
     public static AmexTransactionEntity recordToAmexTxn(CSVRecord csvRecord) {
-        Date postingDate = Date.from(
-                LocalDate.parse(csvRecord.get("postingDate"))
-                        .atStartOfDay(ZoneId.of("America/New_York"))
-                        .toInstant()
+
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+
+        String effectiveDateStr = csvRecord.get("Date");
+        Date effectiveDate = null;
+        try {
+            effectiveDate = formatter.parse(effectiveDateStr);
+        } catch (ParseException e) {
+            LOGGER.warn("American Express Transaction Date={} was not able to be parsed, e={}", effectiveDateStr, e.getMessage());
+            return null;
+        }
+
+        String amountStr = csvRecord.get("Amount");
+        BigDecimal amount = amountStr.isBlank() ? null : new BigDecimal(amountStr);
+
+        return new AmexTransactionEntity(
+                null,
+                csvRecord.get("Extended Details"),
+                effectiveDate,
+                csvRecord.get("Description"),
+                amount,
+                csvRecord.get("Category"),
+                csvRecord.get("Appears On Your Statement As"),
+                csvRecord.get("Address"),
+                csvRecord.get("City/State"),
+                csvRecord.get("Zip Code"),
+                csvRecord.get("Country"),
+                csvRecord.get("Reference")
         );
-
-        String amountStr = csvRecord.get("amount");
-        BigDecimal amount = !amountStr.isBlank() ? null : new BigDecimal(amountStr);
-        String balanceStr = csvRecord.get("balance");
-        BigDecimal balance = !balanceStr.isBlank() ? null : new BigDecimal(balanceStr);
-
-        String checkNumberStr = csvRecord.get("checkOrSlipNumber");
-        Integer checkNumber = checkNumberStr.matches("[0-9]+") ? Integer.valueOf(checkNumberStr) : null;
-//        return new AmexTransactionEntity(
-//                null,
-//                csvRecord.get("details"),
-//                postingDate,
-//                csvRecord.get("description"),
-//                amount,
-//                csvRecord.get("type"),
-//                balance,
-//                checkNumber
-//        );
-        return null;
     }
 
-    public static BeansTransactionEntity chaseToBeanTxn(AmexTransactionEntity amexTxn) {
-//        BeansTransactionEntity.Direction direction = amexTxn.getDetails().equalsIgnoreCase("CREDIT")
-//                ? BeansTransactionEntity.Direction.CREDIT
-//                : BeansTransactionEntity.Direction.DEBIT;
-//        return new BeansTransactionEntity(
-//                null,
-//                direction,
-//                amexTxn.getAmount(),
-//                amexTxn.getPostingDate(),
-//                amexTxn.getDescription(),
-//                "MISC" // TODO change this to real category processing later
-//        );
-        return null;
+    public static BeansTransactionEntity amexToBeanTxn(AmexTransactionEntity amexTxn) {
+        return new BeansTransactionEntity(
+                null,
+                BeansTransactionEntity.Direction.DEBIT,
+                amexTxn.getAmount(),
+                amexTxn.getDate(),
+                amexTxn.getDescription(),
+                amexTxn.getCategory() // TODO change this to real category processing later
+        );
     }
 }

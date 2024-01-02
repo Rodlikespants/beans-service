@@ -37,7 +37,6 @@ public class ChaseCsvProcessor implements CsvProcessor {
     @Override
     public void processFile(String filename) {
         List<BeansTransactionEntity> beansTransactions = parseTransactions(filename);
-
     }
 
     @Override
@@ -110,7 +109,7 @@ public class ChaseCsvProcessor implements CsvProcessor {
                 chaseTxn.getAmount(),
                 chaseTxn.getPostingDate(),
                 chaseTxn.getDescription(),
-                "MISC" // TODO change this to real category processing later
+                chaseTxn.getType() // TODO change this to real category processing later
         );
     }
 }

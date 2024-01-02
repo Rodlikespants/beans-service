@@ -17,7 +17,7 @@ public class ChaseTransactionEntity {
     @Column(name = "details")
     private String details;
 
-    @Column(name = "postingDate")
+    @Column(name = "posting_date")
     private Date postingDate;
 
     @Column(name = "description")
@@ -35,7 +35,7 @@ public class ChaseTransactionEntity {
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @Column(name = "checkOrSlipNumber")
+    @Column(name = "check_number")
     private Integer checkOrSlipNumber;
 
     public ChaseTransactionEntity() {}
