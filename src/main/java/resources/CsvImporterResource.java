@@ -4,6 +4,7 @@ import csv_importer.CsvImporterService;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Path("/csvimporter")
 @Produces(MediaType.APPLICATION_JSON)
+//@Singleton
 public class CsvImporterResource {
     private CsvImporterService service;
 
@@ -24,11 +26,12 @@ public class CsvImporterResource {
     @UnitOfWork
     public Response importFile(
             @QueryParam("filename") Optional<String> filenameOpt,
-            @QueryParam("source") Optional<String> sourceOpt
+            @QueryParam("source") Optional<String> sourceOpt,
+            @QueryParam("email") Optional<String> userEmailOpt
     ) {
         if (filenameOpt.isPresent() && sourceOpt.isPresent()) {
             try {
-                service.importFile(filenameOpt.get(), sourceOpt.get());
+                service.importFile(filenameOpt.get(), sourceOpt.get(), userEmailOpt.get());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

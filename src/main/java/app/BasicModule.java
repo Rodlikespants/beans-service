@@ -6,6 +6,8 @@ import db.MongoDBFactoryConnection;
 import db.MongoDBManaged;
 import db.OrderDAO;
 import db.PersonDAO;
+import db.daos.BeansTransactionDAO;
+import db.daos.UserDAO;
 import db.entities.OrderEntity;
 import db.entities.PersonEntity;
 import healthchecks.DropwizardMongoDBHealthCheck;
@@ -52,6 +54,12 @@ public class BasicModule extends AbstractModule {
         // TODO needed for mySQL
         final OrderDAO orderDAO = new OrderDAO(hibernateBundle.getSessionFactory());
         bind(OrderDAO.class).toInstance(orderDAO);
+
+        final BeansTransactionDAO beansTransactionDAO = new BeansTransactionDAO(hibernateBundle.getSessionFactory());
+        bind(BeansTransactionDAO.class).toInstance(beansTransactionDAO);
+
+        final UserDAO userDAO = new UserDAO(hibernateBundle.getSessionFactory());
+        bind(UserDAO.class).toInstance(userDAO);
 
         env.lifecycle().manage(mongoDBManaged);
 //        env.jersey().register(new DonutResource(donutDAO));

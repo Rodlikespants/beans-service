@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class OrderService {
-    private OrderDAO orderDAO;
+    private final OrderDAO orderDAO;
 
     @Inject
     public OrderService(OrderDAO orderDAO) {

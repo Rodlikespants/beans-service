@@ -1,6 +1,7 @@
 package csv_importer.processors;
 
 import app.App;
+import db.daos.BeansTransactionDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.AmexTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
@@ -9,6 +10,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.util.stream.StreamSupport;
 import static java.util.stream.Collectors.groupingBy;
 
 public class AmexCsvProcessor implements CsvProcessor {
+    private final BeansTransactionDAO beansTxnDao;
     String[] headers = {
             "Date",
             "Description",
@@ -41,11 +44,19 @@ public class AmexCsvProcessor implements CsvProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AmexCsvProcessor.class);
 
-    public AmexCsvProcessor() {}
+//    @Inject
+    public AmexCsvProcessor(BeansTransactionDAO beansTxnDao) {
+        this.beansTxnDao = beansTxnDao;
+    }
 
     @Override
-    public void processFile(String filename) {
-        List<BeansTransactionEntity> beansTransactions = parseTransactions(filename);
+    public void processFile(String filename, String userEmail) {
+        // TODO maybe don't need to take email, just create the user if it doesn't exist and pass the id
+        List<BeansTransactionEntity> beansTransactions = parseTransactions(filename, userEmail);
+        for (BeansTransactionEntity beansTxn: beansTransactions) {
+            beansTxnDao.save(beansTxn);
+        }
+
         Map<String, List<BeansTransactionEntity>> txnsByCategory = beansTransactions.stream()
                 .collect(groupingBy(BeansTransactionEntity::getCategory));
 
@@ -64,7 +75,7 @@ public class AmexCsvProcessor implements CsvProcessor {
     }
 
     @Override
-    public List<BeansTransactionEntity> parseTransactions(String filename) {
+    public List<BeansTransactionEntity> parseTransactions(String filename, String userEmail) {
         CSVParser csvParserResults = null;
         try {
             FileReader in = new FileReader(filename);
@@ -84,6 +95,7 @@ public class AmexCsvProcessor implements CsvProcessor {
         List<AmexTransactionEntity> amexTxns = parseAmexTransactions(records);
 
         // TODO persist Amex transactions
+        // TODO maybe save all the transactions in one bulk db transaction?
 
         return amexTxns.stream().map(AmexCsvProcessor::amexToBeanTxn).toList();
     }
@@ -127,6 +139,7 @@ public class AmexCsvProcessor implements CsvProcessor {
     public static BeansTransactionEntity amexToBeanTxn(AmexTransactionEntity amexTxn) {
         return new BeansTransactionEntity(
                 null,
+                1L, // TODO fix
                 BeansTransactionEntity.Direction.DEBIT,
                 amexTxn.getAmount(),
                 amexTxn.getDate(),

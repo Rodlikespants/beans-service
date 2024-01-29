@@ -2,8 +2,12 @@ package config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import csv_importer.CsvImporterService;
+import csv_importer.processors.AmexCsvProcessor;
+import csv_importer.processors.ChaseCsvProcessor;
 import db.OrderDAO;
 import db.PersonDAO;
+import db.daos.BeansTransactionDAO;
+import db.daos.UserDAO;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import resources.CsvImporterResource;
@@ -79,6 +83,10 @@ public class AppConfig extends Configuration implements DependencyInjectionConfi
         result.add(OrderDAO.class);
         result.add(CsvImporterResource.class);
         result.add(CsvImporterService.class);
+        result.add(BeansTransactionDAO.class);
+        result.add(UserDAO.class);
+//        result.add(AmexCsvProcessor.class);
+//        result.add(ChaseCsvProcessor.class);
 
         return result;
     }

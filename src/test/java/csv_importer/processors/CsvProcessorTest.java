@@ -1,10 +1,12 @@
 package csv_importer.processors;
 
 import csv_importer.CsvParserUtil;
+import db.daos.BeansTransactionDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.hamcrest.CoreMatchers;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileReader;
@@ -19,8 +21,11 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 public class CsvProcessorTest {
+    private BeansTransactionDAO mockBeansTxnDao;
+    private static final String EMAIL = "test@gmail.com";
 
     final String[] headers = {
             "Details",
@@ -31,6 +36,11 @@ public class CsvProcessorTest {
             "Balance",
             "Check or Slip #"
     };
+
+    @Before
+    public void setUp() {
+        mockBeansTxnDao = mock(BeansTransactionDAO.class);
+    }
 
     @Test
     public void givenCSVFile_whenRead_thenContentsAsExpected() throws IOException {
@@ -72,8 +82,8 @@ public class CsvProcessorTest {
     @Test
     public void testChaseTxns() {
         String filename = "src/test/java/fixtures/csv_importer/chase_example1.csv";
-        ChaseCsvProcessor chase = new ChaseCsvProcessor();
-        List<BeansTransactionEntity> beansTxns = chase.parseTransactions(filename);
+        ChaseCsvProcessor chase = new ChaseCsvProcessor(mockBeansTxnDao);
+        List<BeansTransactionEntity> beansTxns = chase.parseTransactions(filename, EMAIL);
         BeansTransactionEntity bean1 = beansTxns.get(0);
         assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
         assertThat(bean1.getAmount(), CoreMatchers.equalTo(BigDecimal.valueOf(-62.36)));
@@ -96,8 +106,8 @@ public class CsvProcessorTest {
     @Test
     public void testAmexTxns() {
         String filename = "src/test/java/fixtures/csv_importer/amex_example1.csv";
-        AmexCsvProcessor amex = new AmexCsvProcessor();
-        List<BeansTransactionEntity> beansTxns = amex.parseTransactions(filename);
+        AmexCsvProcessor amex = new AmexCsvProcessor(mockBeansTxnDao);
+        List<BeansTransactionEntity> beansTxns = amex.parseTransactions(filename, EMAIL);
         BeansTransactionEntity bean1 = beansTxns.get(0);
         assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
         assertThat(bean1.getAmount(), CoreMatchers.equalTo(BigDecimal.valueOf(3.26)));
@@ -120,8 +130,8 @@ public class CsvProcessorTest {
     @Test
     public void testAmexTxnTotals() {
         String filename = "src/test/java/fixtures/csv_importer/amex_example2.csv";
-        AmexCsvProcessor amex = new AmexCsvProcessor();
-        amex.processFile(filename);
+        AmexCsvProcessor amex = new AmexCsvProcessor(mockBeansTxnDao);
+        amex.processFile(filename, EMAIL);
     }
 
 //    @Test

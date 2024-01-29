@@ -11,6 +11,9 @@ public class BeansTransaction {
     }
 
     private Direction direction;
+
+    private long userId;
+
     private BigDecimal amount;
     private Date effectiveDate;
     private String description;
@@ -46,31 +49,40 @@ public class BeansTransaction {
         return category;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BeansTransaction that = (BeansTransaction) o;
-        return direction == that.direction
-                && Objects.equals(amount, that.amount)
-                && Objects.equals(effectiveDate, that.effectiveDate)
-                && Objects.equals(description, that.description)
-                && Objects.equals(category, that.category);
+    public BeansTransaction(Direction direction, long userId, BigDecimal amount, Date effectiveDate, String description, String category) {
+        this.direction = direction;
+        this.userId = userId;
+        this.amount = amount;
+        this.effectiveDate = effectiveDate;
+        this.description = description;
+        this.category = category;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(direction, amount, effectiveDate, description, category);
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "direction=" + direction +
-                ", amount=" + amount +
-                ", effectiveDate=" + effectiveDate +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
-                '}';
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setEffectiveDate(Date effectiveDate) {
+        this.effectiveDate = effectiveDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

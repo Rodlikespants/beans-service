@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface CsvProcessor {
-    void processFile(String filename);
+    void processFile(String filename, String userEmail);
 
-    List<BeansTransactionEntity> parseTransactions(String filename);
+    List<BeansTransactionEntity> parseTransactions(String filename, String userEmail);
 }

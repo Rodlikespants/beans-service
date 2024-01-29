@@ -1,6 +1,7 @@
 package csv_importer.processors;
 
 import csv_importer.CsvParserUtil;
+import db.daos.BeansTransactionDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.ChaseTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
@@ -9,6 +10,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -21,6 +23,7 @@ import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class ChaseCsvProcessor implements CsvProcessor {
+    private final BeansTransactionDAO beansTxnDao;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaseCsvProcessor.class);
     private final String[] headers = {
             "Details",
@@ -32,15 +35,21 @@ public class ChaseCsvProcessor implements CsvProcessor {
             "Check or Slip #"
     };
 
-    public ChaseCsvProcessor() {}
-
-    @Override
-    public void processFile(String filename) {
-        List<BeansTransactionEntity> beansTransactions = parseTransactions(filename);
+//    @Inject
+    public ChaseCsvProcessor(BeansTransactionDAO beansTxnDao) {
+        this.beansTxnDao = beansTxnDao;
     }
 
     @Override
-    public List<BeansTransactionEntity> parseTransactions(String filename) {
+    public void processFile(String filename, String userEmail) {
+        List<BeansTransactionEntity> beansTransactions = parseTransactions(filename, userEmail);
+        for (BeansTransactionEntity beansTxn: beansTransactions) {
+            beansTxnDao.save(beansTxn);
+        }
+    }
+
+    @Override
+    public List<BeansTransactionEntity> parseTransactions(String filename, String userEmail) {
         CSVParser csvParserResults = null;
         try {
             FileReader in = new FileReader(filename);
@@ -60,6 +69,7 @@ public class ChaseCsvProcessor implements CsvProcessor {
         List<ChaseTransactionEntity> chaseTxns = parseChaseTransactions(records);
 
         // TODO persist Chase transactions
+        // TODO maybe save all the transactions in one bulk db transaction?
 
         return chaseTxns.stream().map(ChaseCsvProcessor::chaseToBeanTxn).toList();
     }
@@ -105,6 +115,7 @@ public class ChaseCsvProcessor implements CsvProcessor {
                 : BeansTransactionEntity.Direction.DEBIT;
         return new BeansTransactionEntity(
                 null,
+                2L, // TODO fix
                 direction,
                 chaseTxn.getAmount(),
                 chaseTxn.getPostingDate(),
