@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import config.AppConfig;
 import db.OrderDAO;
 import db.entities.OrderEntity;
+import db.entities.transactions.BeansTransactionEntity;
 import healthchecks.AppHealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
@@ -24,7 +25,11 @@ import resources.PersonResource;
 public class App extends Application<AppConfig> {
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
-    private final HibernateBundle<AppConfig> hibernate = new HibernateBundle<AppConfig>(OrderEntity.class) {
+    // TODO is there a better way than adding every entity class here?
+    private final HibernateBundle<AppConfig> hibernate = new HibernateBundle<AppConfig>(
+            OrderEntity.class,
+            BeansTransactionEntity.class
+    ) {
         @Override
         public DataSourceFactory getDataSourceFactory(AppConfig configuration) {
             return configuration.getDataSourceFactory();
