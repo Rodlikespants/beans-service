@@ -51,7 +51,6 @@ public class BasicModule extends AbstractModule {
 
         bind(PersonDAO.class).toInstance(personDAO);
 
-        // TODO needed for mySQL
         final OrderDAO orderDAO = new OrderDAO(hibernateBundle.getSessionFactory());
         bind(OrderDAO.class).toInstance(orderDAO);
 

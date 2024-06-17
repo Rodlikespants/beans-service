@@ -120,7 +120,8 @@ public class ChaseCsvProcessor implements CsvProcessor {
                 chaseTxn.getAmount(),
                 chaseTxn.getPostingDate(),
                 chaseTxn.getDescription(),
-                chaseTxn.getType() // TODO change this to real category processing later
+                chaseTxn.getType(), // TODO change this to real category processing later
+                true
         );
     }
 }

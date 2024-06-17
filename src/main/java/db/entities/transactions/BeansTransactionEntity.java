@@ -13,7 +13,8 @@ CREATE TABLE beans_txns (
     amount DECIMAL(10,2),
     effective_date date,
     description VARCHAR(255) DEFAULT NULL,
-    category VARCHAR(255)
+    category VARCHAR(255),
+    active TINYINT(1) NOT NULL DEFAULT 1
 );
  */
 
@@ -54,9 +55,12 @@ public class BeansTransactionEntity {
     @Column(name = "category")
     private String category;
 
+    @Column(name = "active")
+    private boolean isActive;
+
     public BeansTransactionEntity() {}
 
-    public BeansTransactionEntity(Long id, long userId, Direction direction, BigDecimal amount, Date effectiveDate, String description, String category) {
+    public BeansTransactionEntity(Long id, long userId, Direction direction, BigDecimal amount, Date effectiveDate, String description, String category, boolean isActive) {
         this.id = id;
         this.userId = userId;
         this.direction = direction;
@@ -64,6 +68,7 @@ public class BeansTransactionEntity {
         this.effectiveDate = effectiveDate;
         this.description = description;
         this.category = category;
+        this.isActive = isActive;
     }
 
     public Long getId() {
@@ -122,17 +127,25 @@ public class BeansTransactionEntity {
         this.category = category;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BeansTransactionEntity that = (BeansTransactionEntity) o;
-        return userId == that.userId && Objects.equals(id, that.id) && direction == that.direction && Objects.equals(amount, that.amount) && Objects.equals(effectiveDate, that.effectiveDate) && Objects.equals(description, that.description) && Objects.equals(category, that.category);
+        return userId == that.userId && isActive == that.isActive && Objects.equals(id, that.id) && direction == that.direction && Objects.equals(amount, that.amount) && Objects.equals(effectiveDate, that.effectiveDate) && Objects.equals(description, that.description) && Objects.equals(category, that.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, direction, amount, effectiveDate, description, category);
+        return Objects.hash(id, userId, direction, amount, effectiveDate, description, category, isActive);
     }
 
     @Override
@@ -145,6 +158,7 @@ public class BeansTransactionEntity {
                 ", effectiveDate=" + effectiveDate +
                 ", description='" + description + '\'' +
                 ", category='" + category + '\'' +
+                ", isActive=" + isActive +
                 '}';
     }
 }

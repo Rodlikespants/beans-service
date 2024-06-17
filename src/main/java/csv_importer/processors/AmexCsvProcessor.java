@@ -52,6 +52,8 @@ public class AmexCsvProcessor implements CsvProcessor {
     @Override
     public void processFile(String filename, String userEmail) {
         // TODO maybe don't need to take email, just create the user if it doesn't exist and pass the id
+
+        // TODO group by a new id based on effective month (join table?) or just effective month and erase/make previous transactions inactive
         List<BeansTransactionEntity> beansTransactions = parseTransactions(filename, userEmail);
         for (BeansTransactionEntity beansTxn: beansTransactions) {
             beansTxnDao.save(beansTxn);
@@ -144,7 +146,8 @@ public class AmexCsvProcessor implements CsvProcessor {
                 amexTxn.getAmount(),
                 amexTxn.getDate(),
                 amexTxn.getDescription(),
-                amexTxn.getCategory() // TODO change this to real category processing later
+                amexTxn.getCategory(), // TODO change this to real category processing later,
+                true
         );
     }
 }
