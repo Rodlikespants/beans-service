@@ -31,18 +31,18 @@ public class BeansTransactionDAO extends AbstractDAO<BeansTransactionEntity> {
         return results.stream().findFirst();
     }
 
-    public List<BeansTransactionEntity> findByUserId() {
-        // Create CriteriaBuilder
-        CriteriaBuilder cb = this.currentSession().getCriteriaBuilder();
-        // Create CriteriaQuery
-        CriteriaQuery<BeansTransactionEntity> cr = cb.createQuery(BeansTransactionEntity.class);
-        Root<BeansTransactionEntity> root = cr.from(BeansTransactionEntity.class);
-        cr.select(root);
-
-        Query<BeansTransactionEntity> query = this.currentSession().createQuery(cr);
-        List<BeansTransactionEntity> results = query.getResultList();
-        return results;
-    }
+//    public List<BeansTransactionEntity> findByUserId() {
+//        // Create CriteriaBuilder
+//        CriteriaBuilder cb = this.currentSession().getCriteriaBuilder();
+//        // Create CriteriaQuery
+//        CriteriaQuery<BeansTransactionEntity> cr = cb.createQuery(BeansTransactionEntity.class);
+//        Root<BeansTransactionEntity> root = cr.from(BeansTransactionEntity.class);
+//        cr.select(root);
+//
+//        Query<BeansTransactionEntity> query = this.currentSession().createQuery(cr);
+//        List<BeansTransactionEntity> results = query.getResultList();
+//        return results;
+//    }
 
     public List<BeansTransactionEntity> findAll() {
         // Create CriteriaBuilder

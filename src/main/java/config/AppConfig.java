@@ -8,7 +8,7 @@ import db.OrderDAO;
 import db.PersonDAO;
 import db.daos.BeansTransactionDAO;
 import db.daos.UserDAO;
-import io.dropwizard.Configuration;
+import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import resources.CsvImporterResource;
 import resources.OrderResource;

@@ -1,6 +1,5 @@
 package csv_importer.processors;
 
-import csv_importer.CsvParserUtil;
 import db.daos.BeansTransactionDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import org.apache.commons.csv.CSVFormat;

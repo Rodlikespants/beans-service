@@ -11,10 +11,10 @@ import db.daos.UserDAO;
 import db.entities.OrderEntity;
 import db.entities.PersonEntity;
 import healthchecks.DropwizardMongoDBHealthCheck;
-import io.dropwizard.Configuration;
+import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
-import io.dropwizard.setup.Environment;
+import io.dropwizard.core.setup.Environment;
 
 public class BasicModule extends AbstractModule {
     private AppConfig config;
