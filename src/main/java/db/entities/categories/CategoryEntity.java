@@ -16,6 +16,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "categories")
 public class CategoryEntity {
+    public static final String NONE_CATEGORY = "NONE";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)

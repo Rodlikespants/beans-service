@@ -58,7 +58,8 @@ public class CategoriesDAO extends AbstractDAO<CategoryEntity> {
     }
 
     public CategoryEntity addCategory(String categoryName) {
-        return findByName(categoryName).orElseGet(() -> save(new CategoryEntity(categoryName)));
+        String sanitizedName = (categoryName.isBlank() || categoryName.isEmpty()) ? CategoryEntity.NONE_CATEGORY : categoryName;
+        return findByName(sanitizedName).orElseGet(() -> save(new CategoryEntity(sanitizedName)));
     }
 
     public CategoryEntity save(CategoryEntity categoryEntity) {

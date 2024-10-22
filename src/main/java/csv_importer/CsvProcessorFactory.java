@@ -9,7 +9,7 @@ import db.daos.CategoriesDAO;
 public class CsvProcessorFactory {
     public static CsvProcessor createCsvProcessor(BeansTransactionDAO beansTransactionDao, CategoriesDAO categoriesDao, String source) {
         if (source.equalsIgnoreCase("CHASE")) {
-            return new ChaseCsvProcessor(beansTransactionDao);
+            return new ChaseCsvProcessor(beansTransactionDao, categoriesDao);
         } else if (source.equalsIgnoreCase("AMEX")) {
             return new AmexCsvProcessor(beansTransactionDao, categoriesDao);
         } else {

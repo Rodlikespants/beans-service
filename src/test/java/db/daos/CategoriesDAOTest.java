@@ -41,7 +41,7 @@ public class CategoriesDAOTest {
     /**
      * Confirms that we cannot write two categories of the same name
      */
-    @Test()
+    @Test
     public void testSaveIfDoesNotExist() {
         String categoryName = "Groceries";
         CategoryEntity categoryEntity1 = new CategoryEntity(categoryName);
@@ -55,7 +55,7 @@ public class CategoriesDAOTest {
         Assertions.assertEquals("could not execute statement", e.getMessage());
     }
 
-    @Test()
+    @Test
     public void testSaveIfAbsent() {
         String categoryName = "Groceries";
         CategoryEntity savedEntity1 = database.inTransaction(() -> categoriesDao.addCategory(categoryName));
@@ -63,5 +63,18 @@ public class CategoriesDAOTest {
         // Attempt to save a category with the same name
         CategoryEntity savedEntity2 = database.inTransaction(() -> categoriesDao.addCategory(categoryName));
         Assertions.assertEquals(savedEntity1, savedEntity2);
+    }
+
+    @Test
+    public void testBlankCategory() {
+        String blankName = " ";
+        String emptyName = "";
+
+        database.inTransaction(() -> categoriesDao.addCategory(blankName));
+        database.inTransaction(() -> categoriesDao.addCategory(emptyName));
+
+        List<CategoryEntity> allCategories = database.inTransaction(() -> categoriesDao.findAll());
+        Assertions.assertEquals(1, allCategories.size());
+        Assertions.assertEquals(CategoryEntity.NONE_CATEGORY, allCategories.get(0).getName());
     }
 }
