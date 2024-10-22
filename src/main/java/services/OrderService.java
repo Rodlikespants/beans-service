@@ -7,8 +7,8 @@ import models.Order;
 import models.Source;
 
 import javax.inject.Inject;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import java.util.Optional;
 

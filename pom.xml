@@ -5,7 +5,7 @@
   <artifactId>beans-service</artifactId>
   <packaging>jar</packaging>
   <properties>
-    <dropwizard.version>3.0.10</dropwizard.version>
+    <dropwizard.version>4.0.10</dropwizard.version>
     <h2.version>2.3.232</h2.version>
     <maven.compiler.source>20</maven.compiler.source>
     <maven.compiler.target>20</maven.compiler.target>

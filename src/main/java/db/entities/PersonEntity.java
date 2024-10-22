@@ -2,8 +2,8 @@ package db.entities;
 
 import org.bson.types.ObjectId;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.util.Objects;
 
 public class PersonEntity {

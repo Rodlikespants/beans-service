@@ -6,8 +6,8 @@ import models.Order;
 import services.OrderService;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Optional;
 

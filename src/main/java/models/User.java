@@ -1,6 +1,6 @@
 package models;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 
 public class User {
     private Long id;
