@@ -1,7 +1,7 @@
 package csv_importer.processors;
 
-import app.App;
 import db.daos.BeansTransactionDAO;
+import db.daos.CategoriesDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.AmexTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
@@ -10,24 +10,19 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.groupingBy;
 
 public class AmexCsvProcessor implements CsvProcessor {
     private final BeansTransactionDAO beansTxnDao;
+    private final CategoriesDAO categoriesDao;
     String[] headers = {
             "Date",
             "Description",
@@ -45,8 +40,9 @@ public class AmexCsvProcessor implements CsvProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmexCsvProcessor.class);
 
 //    @Inject
-    public AmexCsvProcessor(BeansTransactionDAO beansTxnDao) {
+    public AmexCsvProcessor(BeansTransactionDAO beansTxnDao, CategoriesDAO categoriesDao) {
         this.beansTxnDao = beansTxnDao;
+        this.categoriesDao = categoriesDao;
     }
 
     @Override
@@ -63,6 +59,7 @@ public class AmexCsvProcessor implements CsvProcessor {
                 .collect(groupingBy(BeansTransactionEntity::getCategory));
 
         for (String category: txnsByCategory.keySet()) {
+            categoriesDao.addCategory(category);
             List<BeansTransactionEntity> txns = txnsByCategory.get(category);
             BigDecimal total = BigDecimal.ZERO;
             for (BeansTransactionEntity txn: txns) {
@@ -95,9 +92,6 @@ public class AmexCsvProcessor implements CsvProcessor {
         List<CSVRecord> records = StreamSupport.stream(csvParserResults.spliterator(), false).toList();
 
         List<AmexTransactionEntity> amexTxns = parseAmexTransactions(records);
-
-        // TODO persist Amex transactions
-        // TODO maybe save all the transactions in one bulk db transaction?
 
         return amexTxns.stream().map(AmexCsvProcessor::amexToBeanTxn).toList();
     }

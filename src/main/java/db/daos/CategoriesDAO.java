@@ -57,6 +57,10 @@ public class CategoriesDAO extends AbstractDAO<CategoryEntity> {
         return results;
     }
 
+    public CategoryEntity addCategory(String categoryName) {
+        return findByName(categoryName).orElseGet(() -> save(new CategoryEntity(categoryName)));
+    }
+
     public CategoryEntity save(CategoryEntity categoryEntity) {
         return this.persist(categoryEntity);
     }

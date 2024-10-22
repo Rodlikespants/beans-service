@@ -2,27 +2,24 @@ package csv_importer;
 
 import csv_importer.processors.CsvProcessor;
 import db.daos.BeansTransactionDAO;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import db.daos.CategoriesDAO;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
 //@Singleton
 public class CsvImporterService {
-    private final BeansTransactionDAO beansTransactionDAO;
+    private final BeansTransactionDAO beansTransactionDao;
+    private final CategoriesDAO categoriesDao;
 
     @Inject
-    public CsvImporterService(BeansTransactionDAO beansTransactionDAO) {
-        this.beansTransactionDAO = beansTransactionDAO;
+    public CsvImporterService(BeansTransactionDAO beansTransactionDao, CategoriesDAO categoriesDao) {
+        this.beansTransactionDao = beansTransactionDao;
+        this.categoriesDao = categoriesDao;
     }
 
     public void importFile(String filename, String source, String userEmail) throws IOException {
-        CsvProcessor csvProcessor = CsvProcessorFactory.createCsvProcessor(beansTransactionDAO, source);
+        CsvProcessor csvProcessor = CsvProcessorFactory.createCsvProcessor(beansTransactionDao, categoriesDao, source);
         csvProcessor.processFile(filename, userEmail);
     }
 }

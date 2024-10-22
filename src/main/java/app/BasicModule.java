@@ -7,6 +7,7 @@ import db.MongoDBManaged;
 import db.OrderDAO;
 import db.PersonDAO;
 import db.daos.BeansTransactionDAO;
+import db.daos.CategoriesDAO;
 import db.daos.UserDAO;
 import db.entities.OrderEntity;
 import db.entities.PersonEntity;
@@ -39,7 +40,7 @@ public class BasicModule extends AbstractModule {
 
         final MongoDBManaged mongoDBManaged = new MongoDBManaged(mongoDBManagerConn.getClient());
 
-        final PersonDAO personDAO = new PersonDAO(
+        final PersonDAO personDao = new PersonDAO(
                 mongoDBManagerConn.getClient()
                         .getDatabase(
                                 config.getMongoDBConnection().getDatabase()).getCollection("persons")); // TODO complete
@@ -49,16 +50,19 @@ public class BasicModule extends AbstractModule {
                 .getCollection("donuts"));
          */
 
-        bind(PersonDAO.class).toInstance(personDAO);
+        bind(PersonDAO.class).toInstance(personDao);
 
-        final OrderDAO orderDAO = new OrderDAO(hibernateBundle.getSessionFactory());
-        bind(OrderDAO.class).toInstance(orderDAO);
+        final OrderDAO orderDao = new OrderDAO(hibernateBundle.getSessionFactory());
+        bind(OrderDAO.class).toInstance(orderDao);
 
-        final BeansTransactionDAO beansTransactionDAO = new BeansTransactionDAO(hibernateBundle.getSessionFactory());
-        bind(BeansTransactionDAO.class).toInstance(beansTransactionDAO);
+        final BeansTransactionDAO beansTransactionDao = new BeansTransactionDAO(hibernateBundle.getSessionFactory());
+        bind(BeansTransactionDAO.class).toInstance(beansTransactionDao);
 
-        final UserDAO userDAO = new UserDAO(hibernateBundle.getSessionFactory());
-        bind(UserDAO.class).toInstance(userDAO);
+        final CategoriesDAO categoriesDao = new CategoriesDAO(hibernateBundle.getSessionFactory());
+        bind(CategoriesDAO.class).toInstance(categoriesDao);
+
+        final UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
+        bind(UserDAO.class).toInstance(userDao);
 
         env.lifecycle().manage(mongoDBManaged);
 //        env.jersey().register(new DonutResource(donutDAO));

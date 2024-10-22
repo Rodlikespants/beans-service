@@ -1,6 +1,7 @@
 package csv_importer.processors;
 
 import db.daos.BeansTransactionDAO;
+import db.daos.CategoriesDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.ChaseTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
@@ -19,6 +20,7 @@ import java.util.stream.StreamSupport;
 
 public class ChaseCsvProcessor implements CsvProcessor {
     private final BeansTransactionDAO beansTxnDao;
+    private final CategoriesDAO categoriesDao;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChaseCsvProcessor.class);
     private final String[] headers = {
             "Details",
@@ -31,8 +33,9 @@ public class ChaseCsvProcessor implements CsvProcessor {
     };
 
 //    @Inject
-    public ChaseCsvProcessor(BeansTransactionDAO beansTxnDao) {
+    public ChaseCsvProcessor(BeansTransactionDAO beansTxnDao, CategoriesDAO categoriesDao) {
         this.beansTxnDao = beansTxnDao;
+        this.categoriesDao = categoriesDao;
     }
 
     @Override
@@ -65,6 +68,7 @@ public class ChaseCsvProcessor implements CsvProcessor {
 
         // TODO persist Chase transactions
         // TODO maybe save all the transactions in one bulk db transaction?
+        // TODO save categories
 
         return chaseTxns.stream().map(ChaseCsvProcessor::chaseToBeanTxn).toList();
     }

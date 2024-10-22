@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import config.AppConfig;
 import db.OrderDAO;
 import db.entities.OrderEntity;
+import db.entities.categories.CategoryEntity;
 import db.entities.transactions.BeansTransactionEntity;
 import healthchecks.AppHealthCheck;
 import io.dropwizard.core.Application;
@@ -28,7 +29,8 @@ public class App extends Application<AppConfig> {
     // TODO is there a better way than adding every entity class here?
     private final HibernateBundle<AppConfig> hibernate = new HibernateBundle<AppConfig>(
             OrderEntity.class,
-            BeansTransactionEntity.class
+            BeansTransactionEntity.class,
+            CategoryEntity.class
     ) {
         @Override
         public DataSourceFactory getDataSourceFactory(AppConfig configuration) {

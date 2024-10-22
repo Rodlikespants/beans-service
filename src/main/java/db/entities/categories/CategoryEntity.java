@@ -7,6 +7,7 @@ CREATE TABLE categories (
     active TINYINT(1) NOT NULL DEFAULT 1,
     UNIQUE (name)
 );
+ALTER TABLE `categories` ADD INDEX `category_name_index` (`name`);
  */
 
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ public class CategoryEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "active")
