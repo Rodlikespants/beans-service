@@ -7,6 +7,7 @@
   <properties>
     <dropwizard.version>4.0.10</dropwizard.version>
     <h2.version>2.3.232</h2.version>
+    <jupiter.version>5.11.3</jupiter.version>
     <maven.compiler.source>20</maven.compiler.source>
     <maven.compiler.target>20</maven.compiler.target>
     <mongodb.version>3.8.2</mongodb.version>
@@ -38,11 +39,21 @@
       <artifactId>dropwizard-hibernate</artifactId>
       <version>${dropwizard.version}</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.h2database</groupId>-->
-<!--      <artifactId>h2</artifactId>-->
-<!--      <version>{h2.version}</version>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>io.dropwizard</groupId>
+      <artifactId>dropwizard-testing</artifactId>
+      <version>${dropwizard.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${jupiter.version}</version>
+    </dependency>
 <!--    <dependency>-->
 <!--      <groupId>org.hibernate</groupId>-->
 <!--      <artifactId>hibernate-entitymanager</artifactId>-->

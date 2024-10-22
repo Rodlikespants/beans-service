@@ -26,13 +26,18 @@ public class CategoryEntity {
     @Column(name = "active")
     private boolean isActive;
 
+    public CategoryEntity() {}
+
+    public CategoryEntity(String name) {
+        this.name = name;
+        this.isActive = true;
+    }
+
     public CategoryEntity(Long id, String name, boolean isActive) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;
     }
-
-    public CategoryEntity() {}
 
     public Long getId() {
         return id;

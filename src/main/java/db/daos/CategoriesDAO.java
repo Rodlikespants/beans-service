@@ -57,7 +57,7 @@ public class CategoriesDAO extends AbstractDAO<CategoryEntity> {
         return results;
     }
 
-    public void save(CategoryEntity categoryEntity) {
-        this.persist(categoryEntity);
+    public CategoryEntity save(CategoryEntity categoryEntity) {
+        return this.persist(categoryEntity);
     }
 }

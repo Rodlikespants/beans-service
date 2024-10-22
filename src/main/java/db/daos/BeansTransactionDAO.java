@@ -57,8 +57,8 @@ public class BeansTransactionDAO extends AbstractDAO<BeansTransactionEntity> {
         return results;
     }
 
-    public void save(BeansTransactionEntity beansTxnEntity) {
-        this.persist(beansTxnEntity);
+    public BeansTransactionEntity save(BeansTransactionEntity beansTxnEntity) {
+        return this.persist(beansTxnEntity);
 //        this.currentSession().save(beansTxnEntity);
     }
 }
