@@ -11,9 +11,9 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
-public class CategoriesDAO extends AbstractDAO<CategoryEntity> {
+public class CategoryDAO extends AbstractDAO<CategoryEntity> {
 
-    public CategoriesDAO(SessionFactory sessionFactory) {
+    public CategoryDAO(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 

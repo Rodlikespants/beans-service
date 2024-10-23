@@ -1,8 +1,7 @@
 package csv_importer.processors;
 
 import db.daos.BeansTransactionDAO;
-import db.daos.CategoriesDAO;
-import db.entities.categories.CategoryEntity;
+import db.daos.CategoryDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.AmexTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
@@ -23,7 +22,7 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class AmexCsvProcessor implements CsvProcessor {
     private final BeansTransactionDAO beansTxnDao;
-    private final CategoriesDAO categoriesDao;
+    private final CategoryDAO categoryDao;
     String[] headers = {
             "Date",
             "Description",
@@ -41,9 +40,9 @@ public class AmexCsvProcessor implements CsvProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmexCsvProcessor.class);
 
 //    @Inject
-    public AmexCsvProcessor(BeansTransactionDAO beansTxnDao, CategoriesDAO categoriesDao) {
+    public AmexCsvProcessor(BeansTransactionDAO beansTxnDao, CategoryDAO categoryDao) {
         this.beansTxnDao = beansTxnDao;
-        this.categoriesDao = categoriesDao;
+        this.categoryDao = categoryDao;
     }
 
     @Override
@@ -60,7 +59,7 @@ public class AmexCsvProcessor implements CsvProcessor {
                 .collect(groupingBy(BeansTransactionEntity::getCategory));
 
         for (String category: txnsByCategory.keySet()) {
-            categoriesDao.addCategory(category);
+            categoryDao.addCategory(category);
             List<BeansTransactionEntity> txns = txnsByCategory.get(category);
             BigDecimal total = BigDecimal.ZERO;
             for (BeansTransactionEntity txn: txns) {

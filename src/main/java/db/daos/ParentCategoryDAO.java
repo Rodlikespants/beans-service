@@ -12,8 +12,8 @@ import org.hibernate.query.Query;
 import java.util.List;
 import java.util.Optional;
 
-public class ParentCategoriesDAO extends AbstractDAO<ParentCategoryEntity> {
-    public ParentCategoriesDAO(SessionFactory sessionFactory) {
+public class ParentCategoryDAO extends AbstractDAO<ParentCategoryEntity> {
+    public ParentCategoryDAO(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 

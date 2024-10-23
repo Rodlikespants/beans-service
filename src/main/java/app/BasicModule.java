@@ -7,14 +7,10 @@ import db.MongoDBManaged;
 import db.OrderDAO;
 import db.PersonDAO;
 import db.daos.BeansTransactionDAO;
-import db.daos.CategoriesDAO;
-import db.daos.ParentCategoriesDAO;
+import db.daos.CategoryDAO;
+import db.daos.ParentCategoryDAO;
 import db.daos.UserDAO;
-import db.entities.OrderEntity;
-import db.entities.PersonEntity;
 import healthchecks.DropwizardMongoDBHealthCheck;
-import io.dropwizard.core.Configuration;
-import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.core.setup.Environment;
 
@@ -59,11 +55,11 @@ public class BasicModule extends AbstractModule {
         final BeansTransactionDAO beansTransactionDao = new BeansTransactionDAO(hibernateBundle.getSessionFactory());
         bind(BeansTransactionDAO.class).toInstance(beansTransactionDao);
 
-        final CategoriesDAO categoriesDao = new CategoriesDAO(hibernateBundle.getSessionFactory());
-        bind(CategoriesDAO.class).toInstance(categoriesDao);
+        final CategoryDAO categoryDao = new CategoryDAO(hibernateBundle.getSessionFactory());
+        bind(CategoryDAO.class).toInstance(categoryDao);
 
-        final ParentCategoriesDAO parentCategoriesDAO = new ParentCategoriesDAO(hibernateBundle.getSessionFactory());
-        bind(ParentCategoriesDAO.class).toInstance(parentCategoriesDAO);
+        final ParentCategoryDAO parentCategoryDAO = new ParentCategoryDAO(hibernateBundle.getSessionFactory());
+        bind(ParentCategoryDAO.class).toInstance(parentCategoryDAO);
 
         final UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
         bind(UserDAO.class).toInstance(userDao);

@@ -13,30 +13,30 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
-public class ParentCategoriesDAOTest {
+public class ParentCategoryDAOTest {
     public DAOTestExtension database = DAOTestExtension.newBuilder()
             .addEntityClass(ParentCategoryEntity.class)
             .addEntityClass(CategoryEntity.class)
             .build();
-    private ParentCategoriesDAO parentCategoriesDao;
-    private CategoriesDAO categoriesDao;
+    private ParentCategoryDAO parentCategoryDao;
+    private CategoryDAO categoryDao;
 
     @BeforeEach
     public void setUp() {
-        parentCategoriesDao = new ParentCategoriesDAO(database.getSessionFactory());
-        categoriesDao       = new CategoriesDAO(database.getSessionFactory());
+        parentCategoryDao = new ParentCategoryDAO(database.getSessionFactory());
+        categoryDao = new CategoryDAO(database.getSessionFactory());
     }
 
     @Test
     public void testSaveParentCategory() {
         String categoryName = "Groceries";
-        ParentCategoryEntity savedEntity = database.inTransaction(() -> parentCategoriesDao.addParentCategory(categoryName));
+        ParentCategoryEntity savedEntity = database.inTransaction(() -> parentCategoryDao.addParentCategory(categoryName));
 
-        List<ParentCategoryEntity> allCategories = database.inTransaction(() -> parentCategoriesDao.findAll());
+        List<ParentCategoryEntity> allCategories = database.inTransaction(() -> parentCategoryDao.findAll());
         Assertions.assertEquals(1, allCategories.size());
         Assertions.assertEquals(categoryName, allCategories.get(0).getName());
 
-        ParentCategoryEntity actualEntity = database.inTransaction(() -> parentCategoriesDao.findByName(categoryName)).orElse(null);
+        ParentCategoryEntity actualEntity = database.inTransaction(() -> parentCategoryDao.findByName(categoryName)).orElse(null);
         Assertions.assertNotNull(actualEntity);
         Assertions.assertEquals(categoryName, actualEntity.getName());
     }
@@ -49,12 +49,12 @@ public class ParentCategoriesDAOTest {
     public void testSaveIfDoesNotExist() {
         String categoryName = "Groceries";
         ParentCategoryEntity categoryEntity1 = new ParentCategoryEntity(categoryName);
-        ParentCategoryEntity savedEntity1 = database.inTransaction(() -> parentCategoriesDao.save(categoryEntity1));
+        ParentCategoryEntity savedEntity1 = database.inTransaction(() -> parentCategoryDao.save(categoryEntity1));
 
         // Attempt to save a category with the same name
         ParentCategoryEntity categoryEntity2 = new ParentCategoryEntity(categoryName);
         Exception e = Assertions.assertThrows(ConstraintViolationException.class, () ->{
-            database.inTransaction(() -> parentCategoriesDao.save(categoryEntity2));
+            database.inTransaction(() -> parentCategoryDao.save(categoryEntity2));
         });
         Assertions.assertEquals("could not execute statement", e.getMessage());
     }
@@ -62,10 +62,10 @@ public class ParentCategoriesDAOTest {
     @Test
     public void testSaveIfAbsent() {
         String categoryName = "Groceries";
-        ParentCategoryEntity savedEntity1 = database.inTransaction(() -> parentCategoriesDao.addParentCategory(categoryName));
+        ParentCategoryEntity savedEntity1 = database.inTransaction(() -> parentCategoryDao.addParentCategory(categoryName));
 
         // Attempt to save a category with the same name
-        ParentCategoryEntity savedEntity2 = database.inTransaction(() -> parentCategoriesDao.addParentCategory(categoryName));
+        ParentCategoryEntity savedEntity2 = database.inTransaction(() -> parentCategoryDao.addParentCategory(categoryName));
         Assertions.assertEquals(savedEntity1, savedEntity2);
     }
 
@@ -74,10 +74,10 @@ public class ParentCategoriesDAOTest {
         String blankName = " ";
         String emptyName = "";
 
-        database.inTransaction(() -> parentCategoriesDao.addParentCategory(blankName));
-        database.inTransaction(() -> parentCategoriesDao.addParentCategory(emptyName));
+        database.inTransaction(() -> parentCategoryDao.addParentCategory(blankName));
+        database.inTransaction(() -> parentCategoryDao.addParentCategory(emptyName));
 
-        List<ParentCategoryEntity> allCategories = database.inTransaction(() -> parentCategoriesDao.findAll());
+        List<ParentCategoryEntity> allCategories = database.inTransaction(() -> parentCategoryDao.findAll());
         Assertions.assertEquals(1, allCategories.size());
         Assertions.assertEquals(CategoryEntity.NONE_CATEGORY, allCategories.get(0).getName());
     }
@@ -85,14 +85,13 @@ public class ParentCategoriesDAOTest {
     @Test
     public void testSetParentCategory() {
         String categoryName = "Groceries";
-        CategoryEntity categoryEntity = new CategoryEntity(categoryName);
-        CategoryEntity savedEntity = database.inTransaction(() -> categoriesDao.addCategory(categoryName));
+        CategoryEntity savedEntity = database.inTransaction(() -> categoryDao.addCategory(categoryName));
 
         String parentCategoryName = "Food";
-        ParentCategoryEntity savedParentCategory  = database.inTransaction(() -> parentCategoriesDao.addParentCategory(parentCategoryName));
+        ParentCategoryEntity savedParentCategory  = database.inTransaction(() -> parentCategoryDao.addParentCategory(parentCategoryName));
 
         savedEntity.setParentCategory(savedParentCategory);
-        CategoryEntity categoryWithParent = database.inTransaction(() -> categoriesDao.save(savedEntity));
+        CategoryEntity categoryWithParent = database.inTransaction(() -> categoryDao.save(savedEntity));
 
         Assertions.assertEquals(savedParentCategory.getId(), categoryWithParent.getParentCategory().getId());
     }

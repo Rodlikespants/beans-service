@@ -1,7 +1,7 @@
 package csv_importer.processors;
 
 import db.daos.BeansTransactionDAO;
-import db.daos.CategoriesDAO;
+import db.daos.CategoryDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 
 public class CsvProcessorTest {
     private BeansTransactionDAO mockBeansTxnDao;
-    private CategoriesDAO mockCategoriesDao;
+    private CategoryDAO mockCategoryDao;
     private static final String EMAIL = "test@gmail.com";
 
     final String[] headers = {
@@ -41,7 +41,7 @@ public class CsvProcessorTest {
     @Before
     public void setUp() {
         mockBeansTxnDao = mock(BeansTransactionDAO.class);
-        mockCategoriesDao = mock(CategoriesDAO.class);
+        mockCategoryDao = mock(CategoryDAO.class);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class CsvProcessorTest {
     @Test
     public void testChaseTxns() {
         String filename = "src/test/java/fixtures/csv_importer/chase_example1.csv";
-        ChaseCsvProcessor chase = new ChaseCsvProcessor(mockBeansTxnDao, mockCategoriesDao);
+        ChaseCsvProcessor chase = new ChaseCsvProcessor(mockBeansTxnDao, mockCategoryDao);
         List<BeansTransactionEntity> beansTxns = chase.parseTransactions(filename, EMAIL);
         BeansTransactionEntity bean1 = beansTxns.get(0);
         assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
@@ -108,7 +108,7 @@ public class CsvProcessorTest {
     @Test
     public void testAmexTxns() {
         String filename = "src/test/java/fixtures/csv_importer/amex_example1.csv";
-        AmexCsvProcessor amex = new AmexCsvProcessor(mockBeansTxnDao, mockCategoriesDao);
+        AmexCsvProcessor amex = new AmexCsvProcessor(mockBeansTxnDao, mockCategoryDao);
         List<BeansTransactionEntity> beansTxns = amex.parseTransactions(filename, EMAIL);
         BeansTransactionEntity bean1 = beansTxns.get(0);
         assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
@@ -132,7 +132,7 @@ public class CsvProcessorTest {
     @Test
     public void testAmexTxnTotals() {
         String filename = "src/test/java/fixtures/csv_importer/amex_example2.csv";
-        AmexCsvProcessor amex = new AmexCsvProcessor(mockBeansTxnDao, mockCategoriesDao);
+        AmexCsvProcessor amex = new AmexCsvProcessor(mockBeansTxnDao, mockCategoryDao);
         amex.processFile(filename, EMAIL);
 
         // TODO finish
