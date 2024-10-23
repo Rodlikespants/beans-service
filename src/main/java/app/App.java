@@ -6,6 +6,7 @@ import config.AppConfig;
 import db.OrderDAO;
 import db.entities.OrderEntity;
 import db.entities.categories.CategoryEntity;
+import db.entities.categories.ParentCategoryEntity;
 import db.entities.transactions.BeansTransactionEntity;
 import healthchecks.AppHealthCheck;
 import io.dropwizard.core.Application;
@@ -30,7 +31,8 @@ public class App extends Application<AppConfig> {
     private final HibernateBundle<AppConfig> hibernate = new HibernateBundle<AppConfig>(
             OrderEntity.class,
             BeansTransactionEntity.class,
-            CategoryEntity.class
+            CategoryEntity.class,
+            ParentCategoryEntity.class
     ) {
         @Override
         public DataSourceFactory getDataSourceFactory(AppConfig configuration) {

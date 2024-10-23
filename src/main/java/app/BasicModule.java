@@ -8,6 +8,7 @@ import db.OrderDAO;
 import db.PersonDAO;
 import db.daos.BeansTransactionDAO;
 import db.daos.CategoriesDAO;
+import db.daos.ParentCategoriesDAO;
 import db.daos.UserDAO;
 import db.entities.OrderEntity;
 import db.entities.PersonEntity;
@@ -60,6 +61,9 @@ public class BasicModule extends AbstractModule {
 
         final CategoriesDAO categoriesDao = new CategoriesDAO(hibernateBundle.getSessionFactory());
         bind(CategoriesDAO.class).toInstance(categoriesDao);
+
+        final ParentCategoriesDAO parentCategoriesDAO = new ParentCategoriesDAO(hibernateBundle.getSessionFactory());
+        bind(ParentCategoriesDAO.class).toInstance(parentCategoriesDAO);
 
         final UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
         bind(UserDAO.class).toInstance(userDao);
