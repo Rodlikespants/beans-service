@@ -2,6 +2,7 @@ package csv_importer.processors;
 
 import db.daos.BeansTransactionDAO;
 import db.daos.CategoriesDAO;
+import db.entities.categories.CategoryEntity;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.AmexTransactionEntity;
 import org.apache.commons.csv.CSVFormat;
@@ -52,7 +53,7 @@ public class AmexCsvProcessor implements CsvProcessor {
         // TODO group by a new id based on effective month (join table?) or just effective month and erase/make previous transactions inactive
         List<BeansTransactionEntity> beansTransactions = parseTransactions(filename, userEmail);
         for (BeansTransactionEntity beansTxn: beansTransactions) {
-            beansTxnDao.save(beansTxn);
+            beansTxnDao.saveUnique(beansTxn);
         }
 
         Map<String, List<BeansTransactionEntity>> txnsByCategory = beansTransactions.stream()
@@ -141,6 +142,7 @@ public class AmexCsvProcessor implements CsvProcessor {
                 amexTxn.getDate(),
                 amexTxn.getDescription(),
                 amexTxn.getCategory(), // TODO change this to real category processing later,
+                BeansTransactionEntity.Source.AMEX,
                 true
         );
     }

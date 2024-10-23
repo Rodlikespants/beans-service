@@ -31,6 +31,24 @@ public class BeansTransactionDAO extends AbstractDAO<BeansTransactionEntity> {
         return results.stream().findFirst();
     }
 
+    /**
+     * Attempts to avoid duplicate transactions checking hash of fields for a uniqueness key
+     * @param hashText
+     * @return
+     */
+    public Optional<BeansTransactionEntity> findByHashText(long userId, String hashText) {
+        // Create CriteriaBuilder
+        CriteriaBuilder cb = this.currentSession().getCriteriaBuilder();
+        // Create CriteriaQuery
+        CriteriaQuery<BeansTransactionEntity> cr = cb.createQuery(BeansTransactionEntity.class);
+        Root<BeansTransactionEntity> root = cr.from(BeansTransactionEntity.class);
+        cr.select(root).where(cb.equal(root.get("hashtext"), hashText), cb.equal(root.get("userId"), userId));
+
+        Query<BeansTransactionEntity> query = this.currentSession().createQuery(cr);
+        List<BeansTransactionEntity> results = query.getResultList();
+        return results.stream().findFirst();
+    }
+
 //    public List<BeansTransactionEntity> findByUserId() {
 //        // Create CriteriaBuilder
 //        CriteriaBuilder cb = this.currentSession().getCriteriaBuilder();
@@ -55,6 +73,11 @@ public class BeansTransactionDAO extends AbstractDAO<BeansTransactionEntity> {
         Query<BeansTransactionEntity> query = this.currentSession().createQuery(cr);
         List<BeansTransactionEntity> results = query.getResultList();
         return results;
+    }
+
+    public BeansTransactionEntity saveUnique(BeansTransactionEntity beansTxnEntity) {
+        return findByHashText(beansTxnEntity.getUserId(), beansTxnEntity.getHashtext())
+                .orElseGet(() -> save(beansTxnEntity));
     }
 
     public BeansTransactionEntity save(BeansTransactionEntity beansTxnEntity) {

@@ -42,7 +42,7 @@ public class ChaseCsvProcessor implements CsvProcessor {
     public void processFile(String filename, String userEmail) {
         List<BeansTransactionEntity> beansTransactions = parseTransactions(filename, userEmail);
         for (BeansTransactionEntity beansTxn: beansTransactions) {
-            beansTxnDao.save(beansTxn);
+            beansTxnDao.saveUnique(beansTxn);
         }
     }
 
@@ -114,12 +114,13 @@ public class ChaseCsvProcessor implements CsvProcessor {
                 : BeansTransactionEntity.Direction.DEBIT;
         return new BeansTransactionEntity(
                 null,
-                2L, // TODO fix
+                1L, // TODO fix
                 direction,
                 chaseTxn.getAmount(),
                 chaseTxn.getPostingDate(),
                 chaseTxn.getDescription(),
                 chaseTxn.getType(), // TODO change this to real category processing later
+                BeansTransactionEntity.Source.CHASE,
                 true
         );
     }
