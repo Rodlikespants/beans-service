@@ -16,6 +16,7 @@ import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import resources.CategoryResource;
 import resources.CsvImporterResource;
 import resources.OrderResource;
 import resources.PersonResource;
@@ -58,6 +59,7 @@ public class App extends Application<AppConfig> {
         env.jersey().register(injector.getInstance(PersonResource.class));
         env.jersey().register(injector.getInstance(OrderResource.class));
         env.jersey().register(injector.getInstance(CsvImporterResource.class));
+        env.jersey().register(injector.getInstance(CategoryResource.class));
 
         env.healthChecks().register("template",
                 new AppHealthCheck(config.getVersion()));

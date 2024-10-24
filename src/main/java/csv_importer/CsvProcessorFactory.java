@@ -4,7 +4,7 @@ import csv_importer.processors.AmexCsvProcessor;
 import csv_importer.processors.ChaseCsvProcessor;
 import csv_importer.processors.CsvProcessor;
 import db.daos.BeansTransactionDAO;
-import db.daos.CategoryDAO;
+import db.daos.categories.CategoryDAO;
 
 public class CsvProcessorFactory {
     public static CsvProcessor createCsvProcessor(BeansTransactionDAO beansTransactionDao, CategoryDAO categoryDao, String source) {

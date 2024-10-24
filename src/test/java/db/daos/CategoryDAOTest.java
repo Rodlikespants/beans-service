@@ -1,5 +1,6 @@
 package db.daos;
 
+import db.daos.categories.CategoryDAO;
 import db.entities.categories.CategoryEntity;
 import db.entities.categories.ParentCategoryEntity;
 import io.dropwizard.testing.junit5.DAOTestExtension;

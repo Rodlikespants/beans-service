@@ -1,4 +1,4 @@
-package db.daos;
+package db.daos.categories;
 
 import db.entities.categories.CategoryEntity;
 import io.dropwizard.hibernate.AbstractDAO;

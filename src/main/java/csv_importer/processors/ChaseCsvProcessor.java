@@ -1,7 +1,7 @@
 package csv_importer.processors;
 
 import db.daos.BeansTransactionDAO;
-import db.daos.CategoryDAO;
+import db.daos.categories.CategoryDAO;
 import db.entities.transactions.BeansTransactionEntity;
 import db.entities.transactions.third_party.ChaseTransactionEntity;
 import org.apache.commons.csv.CSVFormat;

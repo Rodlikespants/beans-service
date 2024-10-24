@@ -2,7 +2,7 @@ package csv_importer;
 
 import csv_importer.processors.CsvProcessor;
 import db.daos.BeansTransactionDAO;
-import db.daos.CategoryDAO;
+import db.daos.categories.CategoryDAO;
 
 import javax.inject.Inject;
 import java.io.IOException;
