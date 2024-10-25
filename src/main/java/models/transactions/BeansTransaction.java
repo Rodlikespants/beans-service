@@ -1,6 +1,7 @@
 package models.transactions;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,13 +16,13 @@ public class BeansTransaction {
     private long userId;
 
     private BigDecimal amount;
-    private Date effectiveDate;
+    private LocalDate effectiveDate;
     private String description;
 
-    // TODO change this later to an enum
+    // TODO change this later to a Category foreign key
     private String category;
 
-    public BeansTransaction(Direction direction, BigDecimal amount, Date effectiveDate, String description, String category) {
+    public BeansTransaction(Direction direction, BigDecimal amount, LocalDate effectiveDate, String description, String category) {
         this.direction = direction;
         this.amount = amount;
         this.effectiveDate = effectiveDate;
@@ -37,7 +38,7 @@ public class BeansTransaction {
         return amount;
     }
 
-    public Date getEffectiveDate() {
+    public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
 
@@ -49,7 +50,7 @@ public class BeansTransaction {
         return category;
     }
 
-    public BeansTransaction(Direction direction, long userId, BigDecimal amount, Date effectiveDate, String description, String category) {
+    public BeansTransaction(Direction direction, long userId, BigDecimal amount, LocalDate effectiveDate, String description, String category) {
         this.direction = direction;
         this.userId = userId;
         this.amount = amount;
@@ -74,7 +75,7 @@ public class BeansTransaction {
         this.amount = amount;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(LocalDate effectiveDate) {
         this.effectiveDate = effectiveDate;
     }
 

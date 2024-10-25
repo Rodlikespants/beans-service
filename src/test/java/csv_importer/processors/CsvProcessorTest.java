@@ -90,10 +90,8 @@ public class CsvProcessorTest {
         assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
         assertThat(bean1.getAmount(), CoreMatchers.equalTo(BigDecimal.valueOf(-62.36)));
         assertEquals(
-                LocalDate.of(2023, 12, 26)
-                        .atStartOfDay(ZoneId.of("America/New_York"))
-                        .toInstant(),
-                bean1.getEffectiveDate().toInstant()
+                LocalDate.of(2023, 12, 26),
+                bean1.getEffectiveDate()
         );
         assertEquals(
                 "ORIG CO NAME:AMERICAN EXPRESS CO ENTRY DESCR:ACH PMT    SEC:WEB IND ID:M0723           ORIG ID:3116583444",
@@ -114,10 +112,8 @@ public class CsvProcessorTest {
         assertEquals(BeansTransactionEntity.Direction.DEBIT, bean1.getDirection());
         assertThat(bean1.getAmount(), CoreMatchers.equalTo(BigDecimal.valueOf(3.26)));
         assertEquals(
-                LocalDate.of(2023, 12, 24)
-                        .atStartOfDay(ZoneId.of("America/New_York"))
-                        .toInstant(),
-                bean1.getEffectiveDate().toInstant()
+                LocalDate.of(2023, 12, 24),
+                bean1.getEffectiveDate()
         );
         assertEquals(
                 "AplPay APPLE.COM/BILINTERNET CHARGE     CA",

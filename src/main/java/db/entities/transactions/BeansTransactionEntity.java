@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -56,7 +57,7 @@ public class BeansTransactionEntity {
     private BigDecimal amount;
 
     @Column(name = "effective_date")
-    private Date effectiveDate;
+    private LocalDate effectiveDate;
 
     @Column(name = "description")
     private String description;
@@ -74,7 +75,7 @@ public class BeansTransactionEntity {
 
     public BeansTransactionEntity() {}
 
-    public BeansTransactionEntity(Long id, long userId, Direction direction, BigDecimal amount, Date effectiveDate, String description, String category, Source source, boolean isActive) {
+    public BeansTransactionEntity(Long id, long userId, Direction direction, BigDecimal amount, LocalDate effectiveDate, String description, String category, Source source, boolean isActive) {
         this.id = id;
         this.userId = userId;
         this.direction = direction;
@@ -113,11 +114,11 @@ public class BeansTransactionEntity {
         this.hashtext = generateHashText();
     }
 
-    public Date getEffectiveDate() {
+    public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
+    public void setEffectiveDate(LocalDate effectiveDate) {
         this.effectiveDate = effectiveDate;
         this.hashtext = generateHashText();
     }

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -105,13 +107,14 @@ public class AmexCsvProcessor implements CsvProcessor {
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
 
         String effectiveDateStr = csvRecord.get("Date");
-        Date effectiveDate = null;
-        try {
-            effectiveDate = formatter.parse(effectiveDateStr);
-        } catch (ParseException e) {
-            LOGGER.warn("American Express Transaction Date={} was not able to be parsed, e={}", effectiveDateStr, e.getMessage());
-            return null;
-        }
+//        Date effectiveDate = null;
+//        try {
+//            effectiveDate = formatter.parse(effectiveDateStr);
+//        } catch (ParseException e) {
+//            LOGGER.warn("American Express Transaction Date={} was not able to be parsed, e={}", effectiveDateStr, e.getMessage());
+//            return null;
+//        }
+        LocalDate effectiveDate = LocalDate.parse(effectiveDateStr, DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH));
 
         String amountStr = csvRecord.get("Amount");
         BigDecimal amount = amountStr.isBlank() ? null : new BigDecimal(amountStr);

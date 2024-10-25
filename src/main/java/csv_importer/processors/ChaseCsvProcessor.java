@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -78,16 +80,9 @@ public class ChaseCsvProcessor implements CsvProcessor {
     }
 
     public static ChaseTransactionEntity recordToChaseTxn(CSVRecord csvRecord) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
-
         String postingDateStr = csvRecord.get("Posting Date");
-        Date postingDate = null;
-        try {
-            postingDate = formatter.parse(postingDateStr);
-        } catch (ParseException e) {
-            LOGGER.warn("Posting Date={} was not able to be parsed, e={}", postingDateStr, e.getMessage());
-            return null;
-        }
+        LocalDate postingDate = null;
+        postingDate = LocalDate.parse(postingDateStr, DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH));
 
         String amountStr = csvRecord.get("Amount");
         BigDecimal amount = amountStr.isBlank() ? null : new BigDecimal(amountStr);

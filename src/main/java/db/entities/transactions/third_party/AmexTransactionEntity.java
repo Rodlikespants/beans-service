@@ -2,7 +2,7 @@ package db.entities.transactions.third_party;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -18,7 +18,7 @@ public class AmexTransactionEntity {
     private String extendedDetails;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "description")
     private String description;
@@ -50,7 +50,7 @@ public class AmexTransactionEntity {
 
     public AmexTransactionEntity() {}
 
-    public AmexTransactionEntity(Long id, String extendedDetails, Date date, String description, BigDecimal amount, String category, String appearsOnYourStatementAs, String address, String cityAndState, String zipCode, String country, String reference) {
+    public AmexTransactionEntity(Long id, String extendedDetails, LocalDate date, String description, BigDecimal amount, String category, String appearsOnYourStatementAs, String address, String cityAndState, String zipCode, String country, String reference) {
         this.id = id;
         this.extendedDetails = extendedDetails;
         this.date = date;
@@ -73,7 +73,7 @@ public class AmexTransactionEntity {
         return extendedDetails;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

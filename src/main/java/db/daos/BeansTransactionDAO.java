@@ -5,11 +5,12 @@ import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +74,23 @@ public class BeansTransactionDAO extends AbstractDAO<BeansTransactionEntity> {
         Query<BeansTransactionEntity> query = this.currentSession().createQuery(cr);
         List<BeansTransactionEntity> results = query.getResultList();
         return results;
+    }
+
+    public List<BeansTransactionEntity> findUserTransactions(long userId, LocalDate start, LocalDate end, BeansTransactionEntity.Source source) {
+        // Create CriteriaBuilder
+        CriteriaBuilder cb = this.currentSession().getCriteriaBuilder();
+        // Create CriteriaQuery
+        CriteriaQuery<BeansTransactionEntity> cr = cb.createQuery(BeansTransactionEntity.class);
+        Root<BeansTransactionEntity> root = cr.from(BeansTransactionEntity.class);
+        cr.select(root).where(
+                cb.equal(root.get("userId"), userId),
+                cb.lessThanOrEqualTo(root.get("effectiveDate").as(LocalDate.class), end),
+                cb.greaterThanOrEqualTo(root.get("effectiveDate").as(LocalDate.class), start),
+                cb.equal(root.get("source"), source)
+        );
+
+        Query<BeansTransactionEntity> query = this.currentSession().createQuery(cr);
+        return query.getResultList();
     }
 
     public BeansTransactionEntity saveUnique(BeansTransactionEntity beansTxnEntity) {

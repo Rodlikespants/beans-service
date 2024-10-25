@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
@@ -31,7 +32,7 @@ public class BeansTransactionDAOTest {
                 1L,
                 BeansTransactionEntity.Direction.DEBIT,
                 BigDecimal.TEN,
-                new Date(Instant.now().toEpochMilli()),
+                LocalDate.now(),
                 "This is a test transaction",
                 categoryName,
                 BeansTransactionEntity.Source.AMEX,
@@ -57,7 +58,7 @@ public class BeansTransactionDAOTest {
                 1L,
                 BeansTransactionEntity.Direction.DEBIT,
                 BigDecimal.TEN,
-                new Date(Instant.now().toEpochMilli()),
+                LocalDate.now(),
                 "This is a test transaction",
                 categoryName,
                 BeansTransactionEntity.Source.AMEX,
@@ -70,7 +71,7 @@ public class BeansTransactionDAOTest {
                 1L,
                 BeansTransactionEntity.Direction.DEBIT,
                 BigDecimal.TEN,
-                new Date(Instant.now().toEpochMilli()),
+                LocalDate.now(),
                 "This is a test transaction",
                 categoryName,
                 BeansTransactionEntity.Source.AMEX,
@@ -82,5 +83,85 @@ public class BeansTransactionDAOTest {
         Assertions.assertEquals(1, txns.size());
 
         Assertions.assertEquals(savedTxn1.getHashtext(), savedTxn2.getHashtext());
+    }
+    // TODO add test for date range and user id fetch
+
+    @Test
+    public void testFetchByUserIdAndDate() {
+        String categoryName = "Groceries";
+        long userId = 1L;
+        BeansTransactionEntity txn1 = new BeansTransactionEntity(
+                null,
+                userId,
+                BeansTransactionEntity.Direction.DEBIT,
+                BigDecimal.TEN,
+                LocalDate.of(2024,10,1),
+                "This is a test transaction",
+                categoryName,
+                BeansTransactionEntity.Source.AMEX,
+                true
+        );
+        BeansTransactionEntity savedTxn1 = database.inTransaction(() -> beansTxnDao.saveUnique(txn1));
+
+        BeansTransactionEntity txn2 = new BeansTransactionEntity(
+                null,
+                userId,
+                BeansTransactionEntity.Direction.DEBIT,
+                BigDecimal.ONE,
+                LocalDate.of(2024,10,15),
+                "This is a test transaction",
+                categoryName,
+                BeansTransactionEntity.Source.AMEX,
+                true
+        );
+
+        BeansTransactionEntity txn3 = new BeansTransactionEntity(
+                null,
+                userId,
+                BeansTransactionEntity.Direction.DEBIT,
+                BigDecimal.ONE,
+                LocalDate.of(2024,10,16),
+                "This is a test transaction",
+                categoryName,
+                BeansTransactionEntity.Source.CHASE,
+                true
+        );
+
+        BeansTransactionEntity txn4 = new BeansTransactionEntity(
+                null,
+                userId,
+                BeansTransactionEntity.Direction.DEBIT,
+                BigDecimal.ONE,
+                LocalDate.of(2024,10,31),
+                "This is a test transaction",
+                categoryName,
+                BeansTransactionEntity.Source.AMEX,
+                true
+        );
+
+        BeansTransactionEntity txn5= new BeansTransactionEntity(
+                null,
+                userId,
+                BeansTransactionEntity.Direction.DEBIT,
+                BigDecimal.ONE,
+                LocalDate.of(2024,11,1),
+                "This is a test transaction",
+                categoryName,
+                BeansTransactionEntity.Source.AMEX,
+                true
+        );
+
+        BeansTransactionEntity savedTxn2 = database.inTransaction(() -> beansTxnDao.saveUnique(txn2));
+        BeansTransactionEntity savedTxn3 = database.inTransaction(() -> beansTxnDao.saveUnique(txn3));
+        BeansTransactionEntity savedTxn4 = database.inTransaction(() -> beansTxnDao.saveUnique(txn4));
+        BeansTransactionEntity savedTxn5 = database.inTransaction(() -> beansTxnDao.saveUnique(txn5));
+
+        List<BeansTransactionEntity> txns = database.inTransaction(() -> beansTxnDao.findUserTransactions(
+                userId,
+                LocalDate.of(2024, 10, 1),
+                LocalDate.of(2024, 10, 31),
+                BeansTransactionEntity.Source.AMEX
+        ));
+        Assertions.assertEquals(3, txns.size());
     }
 }

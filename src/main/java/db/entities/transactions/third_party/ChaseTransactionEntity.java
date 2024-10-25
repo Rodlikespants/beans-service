@@ -2,7 +2,7 @@ package db.entities.transactions.third_party;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -18,7 +18,7 @@ public class ChaseTransactionEntity {
     private String details;
 
     @Column(name = "posting_date")
-    private Date postingDate;
+    private LocalDate postingDate;
 
     @Column(name = "description")
     private String description;
@@ -40,7 +40,7 @@ public class ChaseTransactionEntity {
 
     public ChaseTransactionEntity() {}
 
-    public ChaseTransactionEntity(Long id, String details, Date postingDate, String description, BigDecimal amount, String type, BigDecimal balance, Integer checkOrSlipNumber) {
+    public ChaseTransactionEntity(Long id, String details, LocalDate postingDate, String description, BigDecimal amount, String type, BigDecimal balance, Integer checkOrSlipNumber) {
         this.id = id;
         this.details = details;
         this.postingDate = postingDate;
@@ -59,7 +59,7 @@ public class ChaseTransactionEntity {
         return details;
     }
 
-    public Date getPostingDate() {
+    public LocalDate getPostingDate() {
         return postingDate;
     }
 
