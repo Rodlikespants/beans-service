@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Optional;
 
-@Path("/csvimporter")
+@Path("/api/v1/csvimporter")
 @Produces(MediaType.APPLICATION_JSON)
 //@Singleton
 public class CsvImporterResource {

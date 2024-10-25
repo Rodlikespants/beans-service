@@ -16,7 +16,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
-@Path("/budget")
+@Path("/api/v1/budgets")
 @Produces(MediaType.APPLICATION_JSON)
 public class BudgetResource {
     private BudgetService service;

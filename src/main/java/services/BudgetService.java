@@ -46,18 +46,16 @@ public class BudgetService {
         Map<String, List<BeansTransaction>> txnsByCategory = beansTransactions.stream()
                 .collect(groupingBy(BeansTransaction::getCategory));
 
-        List<Budget> budgets = new ArrayList<>();
-        Map<ParentCategory, Budget> budgetByParent = new HashMap<>();
+        Map<ParentCategory, Budget> budgetsByParent = new HashMap<>();
         for (String categoryStr: txnsByCategory.keySet()) {
             Category category = categoryDao.findByName(categoryStr).map(CategoryMapper::toCategory).orElse(null);
             if (category != null) {
 
                 // check parent if transactions and amount exists already
-                List<BeansTransaction> totalTransactions = Optional.of(category.getParentCategory())
-                        .map(budgetByParent::get).map(Budget::getTransactions).orElse(Collections.emptyList());
-                List<BeansTransaction> txns = txnsByCategory.get(categoryStr);
-                BigDecimal total = Optional.of(category.getParentCategory())
-                        .map(budgetByParent::get).map(Budget::getTotal).orElse(BigDecimal.ZERO);
+                Optional<Budget> budgetOpt               = Optional.of(category.getParentCategory()).map(budgetsByParent::get);
+                List<BeansTransaction> totalTransactions = budgetOpt.map(Budget::getTransactions).orElse(new ArrayList<>());
+                BigDecimal total                         = budgetOpt.map(Budget::getTotal).orElse(BigDecimal.ZERO);
+                List<BeansTransaction> txns              = txnsByCategory.get(categoryStr);
                 for (BeansTransaction txn : txns) {
                     if (txn.getDirection() == BeansTransaction.Direction.CREDIT) {
                         total = total.add(txn.getAmount().multiply(BigDecimal.valueOf(-1)));
@@ -74,8 +72,7 @@ public class BudgetService {
                             category.getParentCategory(),
                             total,
                             totalTransactions);
-                    budgets.add(budget);
-                    budgetByParent.put(category.getParentCategory(), budget);
+                    budgetsByParent.put(category.getParentCategory(), budget);
                 }
             }
 
@@ -83,6 +80,6 @@ public class BudgetService {
         }
 
 
-        return budgets;
+        return budgetsByParent.values().stream().toList();
     }
 }

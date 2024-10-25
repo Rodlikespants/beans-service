@@ -11,7 +11,7 @@ import services.CategoryService;
 
 import javax.inject.Inject;
 
-@Path("/categories")
+@Path("/api/v1/categories")
 @Produces(MediaType.APPLICATION_JSON)
 public class CategoryResource {
     private CategoryService categoryService;
