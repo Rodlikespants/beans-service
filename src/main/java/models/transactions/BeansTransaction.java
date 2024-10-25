@@ -1,5 +1,8 @@
 package models.transactions;
 
+import db.entities.transactions.BeansTransactionEntity;
+import jakarta.persistence.Column;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
@@ -10,6 +13,13 @@ public class BeansTransaction {
         CREDIT,
         DEBIT
     }
+
+    public enum Source {
+        AMEX,
+        CHASE
+    }
+
+    private Long id;
 
     private Direction direction;
 
@@ -22,12 +32,20 @@ public class BeansTransaction {
     // TODO change this later to a Category foreign key
     private String category;
 
-    public BeansTransaction(Direction direction, BigDecimal amount, LocalDate effectiveDate, String description, String category) {
+    private BeansTransaction.Source source;
+
+    private boolean isActive;
+
+    public BeansTransaction(Long id, long userId, Direction direction, BigDecimal amount, LocalDate effectiveDate, String description, String category, Source source, boolean isActive) {
+        this.id = id;
+        this.userId = userId;
         this.direction = direction;
         this.amount = amount;
         this.effectiveDate = effectiveDate;
         this.description = description;
         this.category = category;
+        this.source = source;
+        this.isActive = isActive;
     }
 
     public Direction getDirection() {
@@ -50,9 +68,10 @@ public class BeansTransaction {
         return category;
     }
 
-    public BeansTransaction(Direction direction, long userId, BigDecimal amount, LocalDate effectiveDate, String description, String category) {
-        this.direction = direction;
+    public BeansTransaction(Long id, long userId, Direction direction, BigDecimal amount, LocalDate effectiveDate, String description, String category) {
+        this.id = id;
         this.userId = userId;
+        this.direction = direction;
         this.amount = amount;
         this.effectiveDate = effectiveDate;
         this.description = description;

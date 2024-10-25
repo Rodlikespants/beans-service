@@ -26,4 +26,7 @@ public class CategoryResource {
     public Response foo() {
         return Response.ok().build();
     }
+
+    // TODO add an endpoint to add parent category
+    // TODO add an endpoint to assign parent category to category
 }

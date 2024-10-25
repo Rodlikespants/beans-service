@@ -104,7 +104,7 @@ public class AmexCsvProcessor implements CsvProcessor {
 
     public static AmexTransactionEntity recordToAmexTxn(CSVRecord csvRecord) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+//        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
 
         String effectiveDateStr = csvRecord.get("Date");
 //        Date effectiveDate = null;
